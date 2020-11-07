@@ -1,0 +1,8 @@
+include _header
+body
+  .container
+    h1 Compose
+    form(action="/", method="post")
+      textarea(name="compose", cols="30", rows="10" placeholder="Compose your Journal Entry")
+      button(type="submit") Publish
+include _footer
