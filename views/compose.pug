@@ -2,7 +2,11 @@ include _header
 body
   .container
     h1 Compose
-    form(action="/", method="post")
-      textarea(name="compose", cols="30", rows="10" placeholder="Compose your Journal Entry")
-      button(type="submit") Publish
-include _footer
+    form(action="/compose", method="post")
+      .form-group
+        label(for="title") Title:
+        input.form-control(type="text" name ="title")
+        label(for="text") Post:
+        textarea.form-control(name="text" placeholder="Compose your Journal Entry")
+        button.btn.btn-primary.mt-3(type="submit") Publish
+  include _footer

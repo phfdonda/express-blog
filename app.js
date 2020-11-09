@@ -11,26 +11,34 @@ app.use(express.static('public'))
 // =============================================================================
 
 // GLOBAL VARS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-const jsonText = fs.readFileSync(__dirname + '/public/data/textContent.json')
-const text = JSON.parse(jsonText)
+const jsonPath = __dirname + '/public/data/textContent.json'
+const jsonText = fs.readFileSync(jsonPath)
+let text = JSON.parse(jsonText)
+let posts = text['posts']
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // APP GET HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 app.get('/',(req,res)=>{
-  res.render('home',{paragraph: text.homeStartingContent})
+  res.render('home',{
+    paragraph: text.homeStartingContent,
+    posts: posts
+  })
 })
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 // APP GET ABOUT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 app.get('/about', (req,res)=>{
-  res.render('about',{paragraph: text.aboutContent})
+  res.render('about',{
+    paragraph: text.aboutContent
+  })
 })
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
 // APP GET CONTACT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 app.get('/contact', (req,res)=>{
-  res.render('contact',{paragraph: text.contactContent})
+  res.render('contact',{
+    paragraph: text.contactContent
+  })
 })
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
@@ -40,13 +48,17 @@ app.get('/compose', (req,res)=>{
 })
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-// APP POST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-app.post('/',(req,res)=>{
+// APP POST COMPOSE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+app.post('/compose',(req,res)=>{
+  posts.push({
+    title: req.body.title,
+    content: req.body.text
+  })
+  text = JSON.stringify(text, null, 2)
+  fs.writeFile(jsonPath, text, ()=>{console.log('Post added!')})
   res.redirect('/')
 })
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-
 
 // APP LISTEN ??????????????????????????????????????????????????????????????????
 app.listen(3000, ()=>{
